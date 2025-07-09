@@ -66,6 +66,59 @@ out += `</ul>`;
 out += `<div class="mt-2">รวมต้องใช้ฟิล์ม <span class="text-red-600 font-bold">${allSheets.length}</span> แผ่น<br>`;
 out += `รวมความยาวฟิล์ม <span class="text-blue-600 font-bold">${totalLength}</span> นิ้ว หรือ <span class="text-blue-600 font-bold">${((totalLength * 60) / 144).toFixed(2)}</span> ฟุต</div>`;
 document.getElementById('filmResult').innerHTML = out;
+
+const carBrand = document.getElementById('carBrand').value;
+const carModel = document.getElementById('carModel').value;
+const frontWidth = document.getElementById('front_width').value;
+const frontHeight = document.getElementById('front_height').value;
+const front = `${frontWidth} x ${frontHeight}`;
+const frontPairWidth = document.getElementById('frontPair_width').value;
+const frontPairHeight = document.getElementById('frontPair_width').value;
+const frontPairRight = `${frontPairWidth} x ${frontPairHeight}`;
+const frontPairLeft = `${frontPairWidth} x ${frontPairHeight}`;
+const rearPairWidth = document.getElementById('rearPair_width').value;
+const rearPairHeight = document.getElementById('rearPair_height').value;
+const rearPairRight = `${rearPairWidth} x ${rearPairHeight}`;
+const rearPairLeft = `${rearPairWidth} x ${rearPairHeight}`;
+const rearWidth = document.getElementById('rear_width').value;
+const rearHeight = document.getElementById('rear_height').value;
+const rear = `${rearWidth} x ${rearHeight}`;
+const sunroofWidth = document.getElementById('sunroof_width').value;
+const sunroofHeight = document.getElementById('sunroof_height').value;
+const sunroof = `${sunroofWidth} x ${sunroofHeight}`;
+const filmResult = document.getElementById('filmResult').innerText;
+
+const formData = new FormData();
+formData.append('carBrand', carBrand);
+formData.append('carModel', carModel);
+formData.append('front', front);
+formData.append('frontPairRight', frontPairRight);
+formData.append('frontPairLeft', frontPairLeft);
+formData.append('rearPairRight', rearPairRight);
+formData.append('rearPairLeft', rearPairLeft);
+formData.append('rear', rear);
+formData.append('sunroof', sunroof);
+formData.append('filmResult', filmResult);
+
+// ส่งข้อมูลไป GAS
+fetch('https://script.google.com/macros/s/AKfycbziuBt6tvDaqp9Hp3PQgPkxD2OL_UQ2jvYF9eJWb2v8IOFf6WAl59MxVK4DtbYca5Y/exec', {
+  method: 'POST',
+  body: formData
+})
+.then(response => response.json())
+.then(data => {
+  if(data.status === 'success') {
+    alert('บันทึกข้อมูลเรียบร้อยแล้ว!');
+    // รีเซ็ตฟอร์มหรือแสดงผลลัพธ์เพิ่มเติม
+  } else {
+    alert('เกิดข้อผิดพลาด: ' + (data.message || ''));
+  }
+})
+.catch(error => {
+  alert('บันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่');
+  console.error(error);
+});
+
 });
 
 function findBestSheetFor3(group, FILM_WIDTH) {
